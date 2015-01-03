@@ -26,6 +26,7 @@ function load_flights() {
     $('#orig, #dest').prop('disabled', true);
     d3.csv("data/dep_arr_by_carrier.csv", function(data) {
 	flights = data;
+
 	$('#orig, #dest').prop('disabled', false);
     });
 }
@@ -61,8 +62,9 @@ function plot_num_flights() {
 
     // make sure origin is valid
     // destination is optional, check if given
-    if (d3.keys(markets).indexOf(orig_market) < 0 || (dest_market.length > 0 && d3.keys(markets).indexOf(dest_market) < 0))
+    if (d3.keys(markets).indexOf(orig_market) < 0 || (dest_market.length > 0 && d3.keys(markets).indexOf(dest_market) < 0)) {
 	return;
+    }
 
     // limit flights for orig(/dest)
     // if no destination given, add all outgoing flights by carrier
@@ -87,24 +89,25 @@ function plot_num_flights() {
     });
 
     // set up svg canvas and x/y scales, axes
-    var margin = {top: 20, right: 20, bottom: 150, left: 40};
+    var margin = {top: 20, right: 20, bottom: 20, left: 150};
     var width = 600 - margin.left - margin.right;
-    var height = 400 - margin.top - margin.bottom;
+    //var height = 800 - margin.top - margin.bottom;
+    var height = 30*plot_data.length - margin.top - margin.bottom;
 
-    var x = d3.scale.ordinal()
-	.rangeRoundBands([0, width], .1);
+    var x = d3.scale.linear()
+	.range([0, width]);
 
-    var y = d3.scale.linear()
-	.range([height, 0]);
+    var y = d3.scale.ordinal()
+	.rangeRoundBands([0, height], 0.25);
 
     var xAxis = d3.svg.axis()
 	.scale(x)
-	.orient("bottom");
+	.orient("top")
+	.ticks(10, "%");
 
     var yAxis = d3.svg.axis()
 	.scale(y)
-	.orient("left")
-	.ticks(10, "%");
+	.orient("left");
 
     // clear existing plot
     $('#plot').html('');
@@ -117,21 +120,15 @@ function plot_num_flights() {
 	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // determine domain for x and y axes
-    x.domain(plot_data.map(function(d) { return d.key; }));
-    y.domain([0, d3.max(plot_data, function(d) { return d.value; })]);
+    x.domain([0, d3.max(plot_data, function(d) { return d.value; })]);
+    y.domain(plot_data.map(function(d) { return d.key; }));
 
     // add x-axis labels
     svg.append("g")
 	.attr("class", "x axis")
-	.attr("transform", "translate(0," + height + ")")
+	//.attr("transform", "translate(0," + height + ")")
 	.call(xAxis)
-	.selectAll("text")  
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", function(d) {
-                return "rotate(-45)"
-        });
+	.selectAll("text");
 
     // add y-axis labels
     svg.append("g")
@@ -141,16 +138,16 @@ function plot_num_flights() {
 	.attr("transform", "rotate(-90)")
 	.attr("y", 6)
 	.attr("dy", ".71em")
-	.style("text-anchor", "end")
-	.text("Number of Flights");
+	.style("text-anchor", "end");
 
     // add bars
     svg.selectAll(".bar")
 	.data(plot_data)
 	.enter().append("rect")
 	.attr("class", "bar")
-	.attr("x", function(d) { return x(d.key); })
-	.attr("width", x.rangeBand())
-	.attr("y", function(d) { return y(d.value); })
-	.attr("height", function(d) { return height - y(d.value); });
+	.attr('airline', function(d) { return d.key; })
+	.attr("y", function(d) { return y(d.key); })
+	.attr("height", y.rangeBand())
+	.attr("x", 0)
+	.attr("width", function(d) { return x(d.value); });
 }
