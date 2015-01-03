@@ -16,7 +16,6 @@ function main() {
 
     // load csv files
     load_carriers();
-    load_markets();
     load_flights();
 }
 
@@ -27,7 +26,26 @@ function load_flights() {
     d3.csv("data/dep_arr_by_carrier.csv", function(data) {
 	flights = data;
 
+	// populate mapping from market name to market id
+	// note: currently not used
+	$.each(flights, function(i, flight) {
+	    if (!(flight.origin_market in markets))
+		markets[flight.origin_market] = flight.origin_city_market_id;
+	});
+
+
+	// set autocomplete for origin and destination
+	// on changed value, run plot_num_flights function
+	$('#orig, #dest').autocomplete({source: d3.keys(markets),
+					change: plot_num_flights});
+
+	// allow input on origin and destination
 	$('#orig, #dest').prop('disabled', false);
+
+
+	// show outbound nyc flights by default
+	$('#orig').val('New York City, NY (Metropolitan Area)');
+	plot_num_flights();
     });
 }
 
@@ -40,19 +58,6 @@ function load_carriers() {
     });
 }
 
-// load mapping from markets to market ids
-// only used to get a unique list of market strings for autocomplete right now
-// when loaded, enable autocomplete
-// on changed value, run plot_num_flights function
-function load_markets() {
-    d3.csv("data/markets.csv", function(data) {
-	$.each(data, function(i, market) {
-	    markets[market.Description] = market.Code;
-	});
-	$('#orig, #dest').autocomplete({source: d3.keys(markets),
-					change: plot_num_flights});
-    });
-}
 
 // plot the number of flights from an origin market to an optional destination market
 function plot_num_flights() {
