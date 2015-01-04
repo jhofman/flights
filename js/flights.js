@@ -40,6 +40,13 @@ function load_flights() {
 	// set autocomplete for origin and destination
 	// on changed value, run plot_num_flights function
 	$('#orig, #dest').autocomplete({source: d3.keys(markets),
+					select: function (event, ui) {
+					    if(ui.item){
+						console.log('foo');
+						$(event.target).val(ui.item.value);
+						show_airports_and_plot();
+					    }
+					},
 					change: show_airports_and_plot});
 
 	// allow input on origin and destination
@@ -70,6 +77,9 @@ function show_airports_and_plot() {
     // make sure origin is valid
     // destination is optional, check if given
     if (d3.keys(markets).indexOf(orig_market) < 0 || (dest_market.length > 0 && d3.keys(markets).indexOf(dest_market) < 0)) {
+	$('#orig, #dest').val('');
+	$('#orig_airports, #dest_airports').html('');
+
 	return;
     }
 
