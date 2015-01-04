@@ -23,21 +23,24 @@ function main() {
 // when loaded, allow input in orig/dest boxes
 function load_flights() {
     $('#orig, #dest').prop('disabled', true);
-    d3.csv("data/dep_arr_by_carrier.csv", function(data) {
+    d3.csv("data/flights.csv", function(data) {
 	flights = data;
 
-	// populate mapping from market name to market id
+	// populate mapping from market name to list of airports
 	// note: currently not used
 	$.each(flights, function(i, flight) {
 	    if (!(flight.origin_market in markets))
-		markets[flight.origin_market] = flight.origin_city_market_id;
+		markets[flight.origin_market] = {};
+	    markets[flight.origin_market][flight.origin] = 1;
 	});
-
+	$.each(markets, function(market, airports) {
+	    markets[market] = d3.keys(airports);
+	});
 
 	// set autocomplete for origin and destination
 	// on changed value, run plot_num_flights function
 	$('#orig, #dest').autocomplete({source: d3.keys(markets),
-					change: plot_num_flights});
+					change: show_airports_and_plot});
 
 	// allow input on origin and destination
 	$('#orig, #dest').prop('disabled', false);
@@ -45,7 +48,7 @@ function load_flights() {
 
 	// show outbound nyc flights by default
 	$('#orig').val('New York City, NY (Metropolitan Area)');
-	plot_num_flights();
+	show_airports_and_plot();
     });
 }
 
@@ -58,6 +61,27 @@ function load_carriers() {
     });
 }
 
+// adds checkboxes for airports and then calls plot_num_flights
+function show_airports_and_plot() {
+    // grab markets from input boxes
+    var orig_market = $('#orig').val();
+    var dest_market = $('#dest').val();
+
+    // make sure origin is valid
+    // destination is optional, check if given
+    if (d3.keys(markets).indexOf(orig_market) < 0 || (dest_market.length > 0 && d3.keys(markets).indexOf(dest_market) < 0)) {
+	return;
+    }
+
+    // add origin airports
+    show_airport_list('#orig_airports', orig_market);
+
+    // add destination airports
+    if (dest_market.length > 0)
+	show_airport_list('#dest_airports', dest_market);
+
+    plot_num_flights();
+}
 
 // plot the number of flights from an origin market to an optional destination market
 function plot_num_flights() {
@@ -77,12 +101,15 @@ function plot_num_flights() {
     var plot_data = {};
     $.each(flights, function(i, flight) {
 	if (flight.origin_market == orig_market && (!dest_market || flight.dest_market == dest_market)) {
-	    carrier = carriers[flight.carrier];
 
-	    if (carrier in plot_data)
-		plot_data[carrier] += flight.num_flights / 60.0;
-	    else
-		plot_data[carrier] = flight.num_flights / 60.0;
+	    if ($('#orig_airports #' + flight.origin).is(':checked') && (!dest_market || $('#dest_airports #' + flight.dest).is(':checked'))) {
+		carrier = carriers[flight.carrier];
+		
+		if (carrier in plot_data)
+		    plot_data[carrier] += parseFloat(flight.num_flights);
+		else
+		    plot_data[carrier] = parseFloat(flight.num_flights);
+	    }
 	}
     });
 
@@ -155,4 +182,14 @@ function plot_num_flights() {
 	.attr("height", y.rangeBand())
 	.attr("x", 0)
 	.attr("width", function(d) { return x(d.value); });
+}
+
+// adds checkboxes for airports in a given market to a div
+function show_airport_list(div, market) {
+    $(div).html('');
+    $.each(markets[market], function (i, airport) {
+	var el = $('<input id=' + airport + ' type=checkbox checked=checked >' + airport + '</input> ');
+	$(div).append(el);
+    });
+    $(div).click(plot_num_flights);
 }
