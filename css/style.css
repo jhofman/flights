@@ -1,3 +1,7 @@
+input {
+    margin: 5px;
+}
+
 .bar {
   fill: steelblue;
 }
