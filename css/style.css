@@ -1,5 +1,5 @@
 input {
-    margin: 5px;
+  margin: 5px;
 }
 
 .bar {
@@ -23,6 +23,19 @@ input {
 
 .x.axis path {
   display: none;
+}
+
+.market {
+  margin: 5px 5px 5px 5px;
+}
+
+.market_name {
+  color: steelblue;
+}
+
+.delete {
+  text-decoration: none;
+  color:lightgray;
 }
 
 /* http://stackoverflow.com/a/15378182 */

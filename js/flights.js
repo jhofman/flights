@@ -53,6 +53,8 @@ function load_flights() {
 	$('#orig, #dest').prop('disabled', false);
 
 
+	$('#orig').focus();
+
 	// show outbound nyc flights by default
 	/*
 	$('#orig').val('New York City, NY (Metropolitan Area)');
@@ -131,7 +133,7 @@ function plot_num_flights() {
 
     // set up svg canvas and x/y scales, axes
     var margin = {top: 20, right: 20, bottom: 20, left: 150};
-    var width = 600 - margin.left - margin.right;
+    var width = Math.min(0.9*$(document).width(), 600) - margin.left - margin.right;
     //var height = 800 - margin.top - margin.bottom;
     var height = 30*plot_data.length - margin.top - margin.bottom;
 
@@ -167,7 +169,6 @@ function plot_num_flights() {
     // add x-axis labels
     svg.append("g")
 	.attr("class", "x axis")
-	//.attr("transform", "translate(0," + height + ")")
 	.call(xAxis)
 	.selectAll("text");
 
@@ -205,9 +206,9 @@ function show_airport_list(div, market) {
     if ($(div).text().indexOf(market) >= 0)
 	return;
 
-    var span = "<span id='" + market + "'>";
-    span += "<a class=delete style='text-decoration: none; color:lightgray' href='#'>x</a>&nbsp;&nbsp;";
-    span += "<span id='" + market + "' style='color: steelblue;'>" + market + "</span>";
+    var span = "<span class=market id='" + market + "'>";
+    span += "<a class=delete href=''>x</a>&nbsp;&nbsp;";
+    span += "<span class=market_name id='" + market + "'>" + market + "</span><br/>";
 
     $.each(markets[market], function (i, airport) {
 	span += '<input id=' + airport + ' type=checkbox checked=checked >' + airport + '</input> '
