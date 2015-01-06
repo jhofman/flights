@@ -1,8 +1,10 @@
 library(plyr)
 library(dplyr)
 
-# read historical flight data
+# read historical flight data from
 # http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236&DB_Short_Name=On-Time
+# with (at least) these headers
+# "CARRIER","ORIGIN_AIRPORT_ID","ORIGIN_CITY_MARKET_ID","ORIGIN","DEST_AIRPORT_ID","DEST_CITY_MARKET_ID","DEST"
 paths <- dir(".", pattern="201.*.csv", full.names=T)
 flights <- ldply(paths, read.csv)
 flights$X <- NULL
@@ -38,14 +40,3 @@ flights_by_airport <- flights %>%
   group_by(origin, dest, carrier) %>%
   summarize(num_flights=round(100*n() / num_days)/100)
 write.csv(flights_by_airport, file='flights.csv', row.names=F)
-
-
-
-#####
-
-flights_by_market <- flights %>%
-  group_by(origin_market, origin_city_market_id, dest_market, dest_city_market_id, carrier) %>%
-  summarize(num_flights=n() / length(unique(flights$fl_date)))
-
-write.csv(flights_by_market, file='flights_by_carrier_and_market.csv', row.names=F)
-
