@@ -12,17 +12,17 @@
 
     <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap-tokenfield.min.css" type="text/css" rel="stylesheet">
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
     <!-- Custom styles for this template -->
     <link href="css/starter-template.css" rel="stylesheet">
 
     <script type="text/javascript" src="js/d3.js"></script>
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-tokenfield.min.js" charset="UTF-8"></script>
 
     <script type="text/javascript" src="js/flights.js"></script>
 
@@ -39,33 +39,30 @@
       <div class="starter-template">
 	<h1>Choose an airline loyalty program</h1>
 	<p class="lead">
-	  <span id=step_1 style="opacity: 0">Enter the city you most often depart from<br/></span>
+	  <span id=step_1 style="opacity: 0">Enter the cities or airports you most often fly between<br/></span>
 	</p>
-      </div>
   
-      <center>
-	<form class=form-inline>
-	  <input id=orig class=form-control type=text placeholder="Origin city" size=35/><br/>
+	<form>
+	  <input id=orig class=form-control type=text placeholder="Origin"/><br/>
 	  <div id=orig_airports></div><br/>
 	  to<br/><br/>
-	  <input id=dest class=form-control type=text placeholder="Destination city" size=35 /><br/>
+	  <input id=dest class=form-control type=text placeholder="Destination" /><br/>
 	  <div id=dest_airports></div>
 	  <br/><br/>
 	</form>
-
+	
 	<p class="lead">
 	  <span id=step_2 style="opacity: 0">All destinations are selected by default<br/></span>
-	  <span id=step_3 style="opacity: 0">Add multiple origins or destinations and select specific airports<br/></span>
 	</p>
 
 	<p class="lead">
-	  <span id=step_4 style="opacity: 0">Select an airline based on the average number of direct flights it offers</span>
+	  <span id=step_3 style="opacity: 0">Select an airline based on the average number of direct flights it offers</span>
 	</p>
 
 	<div id=plot>
 	</div>
 
-    </center>
+      </div>
 
     </div>
 

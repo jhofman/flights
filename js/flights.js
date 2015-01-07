@@ -1,6 +1,7 @@
 var flights;
 var carriers = {};
 var markets = {};
+var airports = {};
 
 var colors = {"United Air Lines Inc.": "#0000A6",
 	      "Virgin America": "#FF0000",
@@ -18,12 +19,14 @@ $(document).ready(main);
 function main() {
     // Overrides the default autocomplete filter function to search only from the beginning of the string
     // http://stackoverflow.com/a/19053987
+    /*
     $.ui.autocomplete.filter = function (array, term) {
 	var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i");
 	return $.grep(array, function (value) {
             return matcher.test(value.label || value.value || value);
 	});
     };
+    */
 
     // load csv files
     load_carriers();
@@ -38,19 +41,50 @@ function load_flights() {
     d3.csv("data/flights.csv", function(data) {
 	flights = data;
 
-	// set autocomplete for origin and destination
-	// on changed value, run plot_num_flights function
-	$('#orig, #dest').autocomplete({source: d3.keys(markets),
-					select: function (event, ui) {
-					    if(ui.item){
-						$(event.target).val(ui.item.value);
-						show_airports_and_plot();
-					    }
-					},
-					change: show_airports_and_plot});
+
+	$('#orig, #dest').tokenfield({
+            autocomplete: {
+		source: d3.keys(markets).concat(d3.keys(airports)),
+		delay: 100
+            },
+            showAutocompleteOnFocus: false
+	});
+
+	$('#orig, #dest').on('tokenfield:createtoken', function (event) {
+	    var new_token = event.attrs.value;
+	    var existing_tokens = $(this).tokenfield('getTokens');
+
+	    // prevent duplicates
+	    $.each(existing_tokens, function(index, token) {
+		if (token.value === new_token)
+		    event.preventDefault();
+	    });
+
+	    // replace markets with all airports in them
+            if (d3.keys(markets).indexOf(new_token) >= 0) {
+		var tf = $(this);
+
+		$.each(markets[new_token], function (i, airport) {
+		    tf.tokenfield('createToken', {value: airport, label: airport});
+		});
+		event.preventDefault();
+		// simpler way to clear typed text?
+		$('#' + $(this).attr('id') + '-tokenfield').val('');
+            }
+
+	    // limit to allowed options (markets or airports)
+	    var allowed_tokens = d3.keys(markets).concat(d3.keys(airports));
+            if (allowed_tokens.indexOf(new_token) < 0) {
+		event.preventDefault();
+            }
+
+	});
+	$('#orig, #dest').change(plot_num_flights);
+
 
 	// allow input on origin and destination
 	$('#orig, #dest').prop('disabled', false);
+	$('#orig, #dest').tokenfield('enable');
 
 	$('#step_1').animate({opacity: 1}, 1000);
 	$('#orig').focus();
@@ -58,7 +92,7 @@ function load_flights() {
 	// show outbound nyc flights by default
 	/*
 	$('#orig').val('New York City, NY (Metropolitan Area)');
-	show_airports_and_plot();
+	plot_num_flights();
 	*/
     });
 }
@@ -79,6 +113,7 @@ function load_markets() {
 	    if (!(airport.origin_market in markets))
 		markets[airport.origin_market] = {};
 	    markets[airport.origin_market][airport.origin] = 1;
+	    airports[airport.origin] = 1;
 	});
 	$.each(markets, function(market, airports) {
 	    markets[market] = d3.keys(airports);
@@ -86,37 +121,16 @@ function load_markets() {
     });
 }
 
-// adds checkboxes for airports and then calls plot_num_flights
-function show_airports_and_plot() {
-    // grab markets from input boxes
-    var orig_market = $('#orig').val();
-    var dest_market = $('#dest').val();
-
-    // make sure origin is valid
-    // destination is optional, check if given
-    if (d3.keys(markets).indexOf(orig_market) < 0 || (dest_market.length > 0 && d3.keys(markets).indexOf(dest_market) < 0)) {
-	return;
-    }
-
-    // add origin airports
-    show_airport_list('#orig_airports', orig_market);
-
-    // add destination airports
-     if (dest_market.length > 0)
-	show_airport_list('#dest_airports', dest_market);
-
-    $('#dest').focus();
-
-    plot_num_flights();
-}
-
 // plot the number of flights from an origin market to an optional destination market
 function plot_num_flights() {
+    var orig = $('#orig').tokenfield('getTokens').map(function (token) { return token.value; });
+    var dest = $('#dest').tokenfield('getTokens').map(function (token) { return token.value; });
+
     // limit flights checked airports only
     // if no destination given, add all outgoing flights by carrier
     var plot_data = {};
     $.each(flights, function(i, flight) {
-	if ($('#orig_airports #' + flight.origin).is(':checked') && ($('#dest_airports').html() == '' || $('#dest_airports #' + flight.dest).is(':checked'))) {
+	if (orig.indexOf(flight.origin) >= 0 && (dest.length == 0 || dest.indexOf(flight.dest) >= 0)) {
 	    carrier = carriers[flight.carrier];
 
 	    if (carrier in plot_data)
@@ -202,9 +216,7 @@ function plot_num_flights() {
 	});
 
     $('#step_2').animate({opacity: 1}, 2000, function() {
-	$('#step_3').animate({opacity: 1}, 2000, function() {
-	    $('#step_4').animate({opacity: 1},2000);
-	});
+	$('#step_3').animate({opacity: 1}, 2000);
     });
 }
 
