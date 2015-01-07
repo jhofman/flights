@@ -52,7 +52,7 @@ function load_flights() {
 	// allow input on origin and destination
 	$('#orig, #dest').prop('disabled', false);
 
-
+	$('#step_1').animate({opacity: 1}, 1000);
 	$('#orig').focus();
 
 	// show outbound nyc flights by default
@@ -102,8 +102,10 @@ function show_airports_and_plot() {
     show_airport_list('#orig_airports', orig_market);
 
     // add destination airports
-    if (dest_market.length > 0)
+     if (dest_market.length > 0)
 	show_airport_list('#dest_airports', dest_market);
+
+    $('#dest').focus();
 
     plot_num_flights();
 }
@@ -199,6 +201,11 @@ function plot_num_flights() {
 		return "green";
 	});
 
+    $('#step_2').animate({opacity: 1}, 2000, function() {
+	$('#step_3').animate({opacity: 1}, 2000, function() {
+	    $('#step_4').animate({opacity: 1},2000);
+	});
+    });
 }
 
 // adds checkboxes for airports in a given market to a div

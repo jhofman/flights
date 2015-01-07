@@ -39,24 +39,32 @@
       <div class="starter-template">
 	<h1>Choose an airline loyalty program</h1>
 	<p class="lead">
-	  Enter cities that you most often fly between below.<br/>
-	  Then select your preferred airports.<br/>
-	  Select an airline based on the average number of direct flights it offers.
+	  <span id=step_1 style="opacity: 0">Enter the city you most often depart from<br/></span>
 	</p>
       </div>
   
-    <center>
-      <form class=form-inline>
-	<input id=orig class=form-control type=text placeholder="Origin city" size=35/><br/>
-	<div id=orig_airports></div><br/>
-	to<br/><br/>
-	<input id=dest class=form-control type=text placeholder="Destination city" size=35 /><br/>
-	<div id=dest_airports></div>
-	<br/><br/>
-      </form>
+      <center>
+	<form class=form-inline>
+	  <input id=orig class=form-control type=text placeholder="Origin city" size=35/><br/>
+	  <div id=orig_airports></div><br/>
+	  to<br/><br/>
+	  <input id=dest class=form-control type=text placeholder="Destination city" size=35 /><br/>
+	  <div id=dest_airports></div>
+	  <br/><br/>
+	</form>
 
-      <div id=plot>
-      </div>
+	<p class="lead">
+	  <span id=step_2 style="opacity: 0">All destinations are selected by default<br/></span>
+	  <span id=step_3 style="opacity: 0">Add multiple origins or destinations and select specific airports<br/></span>
+	</p>
+
+	<p class="lead">
+	  <span id=step_4 style="opacity: 0">Select an airline based on the average number of direct flights it offers</span>
+	</p>
+
+	<div id=plot>
+	</div>
+
     </center>
 
     </div>
