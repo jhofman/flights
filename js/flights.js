@@ -126,6 +126,12 @@ function plot_num_flights() {
     var orig = $('#orig').tokenfield('getTokens').map(function (token) { return token.value; });
     var dest = $('#dest').tokenfield('getTokens').map(function (token) { return token.value; });
 
+    if (orig.length)
+	$('#orig-tokenfield').removeAttr('placeholder');
+
+    if (dest.length)
+	$('#dest-tokenfield').removeAttr('placeholder');
+
     // limit flights checked airports only
     // if no destination given, add all outgoing flights by carrier
     var plot_data = {};
