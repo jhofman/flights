@@ -1,0 +1,56 @@
+input {
+  margin: 5px;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.market {
+  margin: 5px 5px 5px 5px;
+}
+
+.market_name {
+  color: steelblue;
+}
+
+.delete {
+  text-decoration: none;
+  color:lightgray;
+}
+
+/* http://stackoverflow.com/a/15378182 */
+::-webkit-input-placeholder {
+   text-align: center;
+}
+
+:-moz-placeholder {
+   text-align: center;  
+}
+
+::-moz-placeholder {
+   text-align: center;  
+}
+
+:-ms-input-placeholder {  
+   text-align: center; 
+}

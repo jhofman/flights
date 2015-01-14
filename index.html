@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+
+    <title>Choose an airline loyalty program</title>
+
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap-tokenfield.min.css" type="text/css" rel="stylesheet">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <!-- Custom styles for this template -->
+    <link href="css/starter-template.css" rel="stylesheet">
+
+    <script type="text/javascript" src="js/d3.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-tokenfield.min.js" charset="UTF-8"></script>
+
+    <script type="text/javascript" src="js/flights.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container">
+
+      <div class="starter-template">
+	<h1>Choose an airline loyalty program</h1>
+	<p class="lead">
+	  <span id=step_1 style="opacity: 0">Enter the cities or airports you most often fly between<br/></span>
+	</p>
+  
+	<form>
+	  <label for=orig>From:</label>
+	  <input id=orig class=form-control type=text placeholder="Add cities or airports"/><br/>
+	  <!--<div id=orig_airports></div><br/>-->
+	  <label for=orig>To:</label>
+	  <input id=dest class=form-control type=text placeholder="Add cities or airports" /><br/>
+	  <!--<div id=dest_airports></div>-->
+	  <br/><br/>
+	</form>
+	
+	<p class="lead">
+	  <span id=step_2 style="opacity: 0">All destinations are selected by default<br/></span>
+	</p>
+
+	<p class="lead">
+	  <span id=step_3 style="opacity: 0">Select an airline based on the average number of direct flights it offers</span>
+	</p>
+
+	<div id=plot>
+	</div>
+
+      </div>
+
+    </div>
+
+  </body>
+
+</html>
