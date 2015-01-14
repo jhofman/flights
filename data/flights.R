@@ -5,6 +5,7 @@ library(dplyr)
 # http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236&DB_Short_Name=On-Time
 # with (at least) these headers
 # "CARRIER","ORIGIN_AIRPORT_ID","ORIGIN_CITY_MARKET_ID","ORIGIN","DEST_AIRPORT_ID","DEST_CITY_MARKET_ID","DEST"
+# save filenames as YYYYMM.csv
 paths <- dir(".", pattern="201.*.csv", full.names=T)
 flights <- ldply(paths, read.csv)
 flights$X <- NULL
@@ -12,6 +13,7 @@ names(flights) <- tolower(names(flights))
 
 # read airline information and limit to existing carriers
 # http://www.transtats.bts.gov/Download_Lookup.asp?Lookup=L_CARRIER_HISTORY
+# save as carriers.csv
 carriers <- read.csv('carriers.csv')
 carriers <- carriers %>%
   mutate(nc=nchar(as.character(Description)),
@@ -22,6 +24,7 @@ write.csv(carriers, file='current_carriers.csv', row.names=F)
 
 # read market information and join to flights
 # http://www.transtats.bts.gov/Download_Lookup.asp?Lookup=L_CITY_MARKET_ID
+# save as markets.csv
 markets <- read.csv('markets.csv')
 names(markets)=c("origin_city_market_id","origin_market")
 flights <- left_join(flights, markets)
