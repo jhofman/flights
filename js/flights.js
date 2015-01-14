@@ -118,6 +118,15 @@ function load_markets() {
 	$.each(markets, function(market, airports) {
 	    markets[market] = d3.keys(airports);
 	});
+
+	// include 3 letter metro codes
+	markets["NYC"] = markets["New York City, NY (Metropolitan Area)"];
+	markets["QDF"] = markets["Dallas/Fort Worth, TX"];
+	markets["DTT"] = markets["Detroit, MI"];
+	markets["QHO"] = markets["Houston, TX"];
+	markets["QLA"] = markets["Los Angeles, CA (Metropolitan Area)"];
+	markets["QMI"] = markets["Miami, FL (Metropolitan Area)"];;
+	markets["QSF"] = markets["San Francisco, CA (Metropolitan Area)"];
     });
 }
 
