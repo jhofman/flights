@@ -234,24 +234,3 @@ function plot_num_flights() {
 	$('#step_3').animate({opacity: 1}, 2000);
     });
 }
-
-// adds checkboxes for airports in a given market to a div
-function show_airport_list(div, market) {
-    if ($(div).text().indexOf(market) >= 0)
-	return;
-
-    var span = "<span class=market id='" + market + "'>";
-    span += "<a class=delete href=''>x</a>&nbsp;&nbsp;";
-    span += "<span class=market_name id='" + market + "'>" + market + "</span><br/>";
-
-    $.each(markets[market], function (i, airport) {
-	span += '<input id=' + airport + ' type=checkbox checked=checked >' + airport + '</input> '
-    });
-    span += "<br/></span>";
-
-    span = $(span);
-    span.find('.delete').click(function () { $(this).parent().remove(); })
-
-    $(div).append(span);
-    $(div).click(plot_num_flights);
-}
