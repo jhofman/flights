@@ -52,15 +52,16 @@
 	  <label for=orig>To:</label>
 	  <input id=dest class=form-control type=text placeholder="Add cities or airports" /><br/>
 	  <!--<div id=dest_airports></div>-->
-	  <br/><br/>
 	</form>
 
 	<p class="lead">
-	  <span id=step_2 style="opacity: 0">All destinations are selected by default<br/></span>
+	  <span id=step_2 style="opacity: 0">
+	    <span id=best_airline></span> is the best airline for you with an average of <span id=num_flights></span> direct flights per day between these locations
+	  </span>
 	</p>
 
-	<p class="lead">
-	  <span id=step_3 style="opacity: 0">Select an airline based on the average number of direct flights it offers</span>
+	<p>
+	  <span id=step_3 style="opacity: 0">All destinations are selected by default<br/></span>
 	</p>
 
 	<div id=plot>

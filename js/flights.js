@@ -138,8 +138,10 @@ function plot_num_flights() {
     if (orig.length)
 	$('#orig-tokenfield').removeAttr('placeholder');
 
-    if (dest.length)
+    if (dest.length) {
 	$('#dest-tokenfield').removeAttr('placeholder');
+	$('#step_3').css('opacity', 0);
+    }
 
     // limit flights checked airports only
     // if no destination given, add all outgoing flights by carrier
@@ -229,6 +231,9 @@ function plot_num_flights() {
 	    else
 		return "green";
 	});
+
+    $('#best_airline').html(plot_data[0].key).css('color', colors[plot_data[0].key]);
+    $('#num_flights').html(Math.round(plot_data[0].value*10)/10).css('color', colors[plot_data[0].key]);
 
     $('#step_2').animate({opacity: 1}, 2000, function() {
 	$('#step_3').animate({opacity: 1}, 2000);
